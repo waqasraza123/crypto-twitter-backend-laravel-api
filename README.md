@@ -1,0 +1,2 @@
+- Converting [this](https://github.com/waqasraza123/crypto-twitter-backend) Nodejs and Express powered API to Laravel.
+- Using [Laravel Sanctum](https://laravel.com/docs/9.x/sanctum) for authentication via API Tokens.
