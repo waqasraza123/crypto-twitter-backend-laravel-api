@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Crypto;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Register;
 use App\Http\Controllers\Login;
@@ -17,13 +17,19 @@ use App\Http\Controllers\UserProfile;
 |
 */
 
+//auth routes
 Route::post("register", [Register::class, "register"]);
 Route::post("login", [Login::class, "login"]);
 
 Route::middleware('auth:sanctum')->group(function () {
+    //user profile routes
     Route::post("/user-profile", [UserProfile::class, "updateProfile"]);
     Route::get("/user-profile", [UserProfile::class, "showProfile"]);
 
+    //crypto routes
+    Route::get("crypto/all", [Crypto::class, "all"]);
+
+    //logout route
     Route::post("logout", [UserProfile::class, "logout"]);
 });
 
