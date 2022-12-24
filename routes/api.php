@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //crypto routes
     Route::get("crypto/all", [Crypto::class, "all"]);
+    Route::get("crypto/meta/{currencyId}", [Crypto::class, "meta"]);
 
     //logout route
     Route::post("logout", [UserProfile::class, "logout"]);
