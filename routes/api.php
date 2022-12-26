@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Register;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\UserProfile;
+use App\Http\Controllers\Blog;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //crypto routes
     Route::get("crypto/all", [Crypto::class, "all"]);
     Route::get("crypto/meta/{currencyId}", [Crypto::class, "meta"]);
+
+    //blog routes
+    Route::post("blog/posts", [Blog::class, "store"]);
+    Route::get("blog/posts", [Blog::class, "all"]);
 
     //logout route
     Route::post("logout", [UserProfile::class, "logout"]);
