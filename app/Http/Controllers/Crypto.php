@@ -27,7 +27,7 @@ class Crypto extends Controller
 
         //response is already a json response so no need to do
         //json($response)
-        return $response;
+        return response($response);
     }
 
 

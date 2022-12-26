@@ -15,3 +15,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return "Home";
 });
+Route::get("password", function (){
+    return \Illuminate\Support\Facades\Hash::make("123456");
+});

@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //user profile routes
     Route::post("/user-profile", [UserProfile::class, "updateProfile"]);
     Route::get("/user-profile", [UserProfile::class, "showProfile"]);
+    Route::post("/user-profile/password", [UserProfile::class, "updatePassword"]);
 
     //crypto routes
     Route::get("crypto/all", [Crypto::class, "all"]);
