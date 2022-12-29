@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Blog as BlogModel;
+use Illuminate\Support\Facades\Validator;
 
 class Blog extends Controller
 {
     /*
      * save blog post to db
+     * POST
      */
     public function store(Request $request){
 
@@ -42,11 +44,39 @@ class Blog extends Controller
     }
 
     /*
+     * returns a single post
+     * and its comments
+     * GET
+     */
+    public function single(Request $request){
+
+        $postId = $request->route()->parameter("id");
+
+        //validate if post exists
+        Validator::make($request->route()->parameters(), [
+            "id" => "required|exists:App\Models\Blog,id"
+        ])->validate();
+
+        //fetch the post from db
+        $post = BlogModel::find($postId);
+
+        //set the post author using belongs to
+        $post->author = $post->author;
+
+        //response
+        return response()->json([
+            "post" => $post
+        ], 200);
+
+    }
+
+    /*
      * returns all posts
+     * GET
      */
     public function all(){
 
-        $blogs = BlogModel::with("author")->get();
+        $blogs = BlogModel::with("author")->orderBy("updated_at", "desc")->get();
 
         return response()->json($blogs, 200);
     }

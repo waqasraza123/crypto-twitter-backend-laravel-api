@@ -6,6 +6,7 @@ use App\Http\Controllers\Register;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\UserProfile;
 use App\Http\Controllers\Blog;
+use App\Http\Controllers\Comment;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,11 @@ Route::middleware('auth:sanctum')->group(function () {
     //blog routes
     Route::post("blog/posts", [Blog::class, "store"]);
     Route::get("blog/posts", [Blog::class, "all"]);
+    Route::get("blog/post/{id}", [Blog::class, "single"]);
+
+    //comment routes
+    Route::post("comments", [Comment::class, "store"]);
+    Route::get("comments/post/{post_id}", [Comment::class, "postComments"]);
 
     //logout route
     Route::post("logout", [UserProfile::class, "logout"]);
