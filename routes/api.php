@@ -7,6 +7,7 @@ use App\Http\Controllers\Login;
 use App\Http\Controllers\UserProfile;
 use App\Http\Controllers\Blog;
 use App\Http\Controllers\Comment;
+use App\Http\Controllers\Tweet;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("blog/posts", [Blog::class, "store"]);
     Route::get("blog/posts", [Blog::class, "all"]);
     Route::get("blog/post/{id}", [Blog::class, "single"]);
+
+    //tweet routes
+    Route::post("tweet", [Tweet::class, "store"]);
+    Route::get("tweets", [Tweet::class, "all"]);
 
     //comment routes
     Route::post("comments", [Comment::class, "store"]);
