@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,9 +13,18 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', function () {
-    return "Home";
+Route::get('/auth/redirect', function () {
+    return Socialite::driver('github')->stateless()->redirect();
 });
-Route::get("password", function (){
-    return \Illuminate\Support\Facades\Hash::make("123456");
+
+Route::get('/auth/callback', function (\Illuminate\Http\Request $request) {
+    $user = Socialite::driver('github')->stateless()->user();
+
+    return response()->json([
+        "user" => $user
+    ]);
+});
+
+Route::get("test", function (){
+   return Socialite::driver("github")->userFromToken("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");
 });

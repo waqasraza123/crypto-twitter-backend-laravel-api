@@ -23,6 +23,10 @@ use App\Http\Controllers\Tweet;
 //auth routes
 Route::post("register", [Register::class, "register"]);
 Route::post("login", [Login::class, "login"]);
+Route::get('/auth/redirect/{socialName}', function ($socialName) {
+    return Socialite::driver($socialName)->stateless()->redirect()->getTargetUrl();
+});
+Route::get('/auth/callback/{socialName}', [Login::class, "socialLogin"]);
 
 Route::middleware('auth:sanctum')->group(function () {
     //user profile routes

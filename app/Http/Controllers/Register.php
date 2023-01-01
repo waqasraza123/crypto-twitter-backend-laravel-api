@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class Register extends Controller
@@ -26,6 +27,8 @@ class Register extends Controller
         $user->email = $request->input("email");
         $user->password = Hash::make($request->input("password"));
         $user->save();
+
+        Auth::login($user);
 
         //create token for the user
         $token = $user->createToken($request->email)->plainTextToken;
