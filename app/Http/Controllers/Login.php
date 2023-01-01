@@ -84,7 +84,6 @@ class Login extends Controller
             ],
             [
                 "name" => $socialUser->name,
-                "photo" => $socialUser->avatar,
                 "username" => $this->getTemporaryUsername($socialUser->email)
             ]
         );

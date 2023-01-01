@@ -2,4 +2,4 @@
 - Using [Laravel Sanctum](https://laravel.com/docs/9.x/sanctum) for authentication via API Tokens.
 - Not using laravel cookies/session to authenticate.
 - This project uses CoinmarketCap API Key. So generate yours and set in .env as `COINMARKETCAP_API`
-- `Laravel Socialite`
+- `Laravel Socialite` package is used to login via `Social Networks` i.e. github, google, twitter
