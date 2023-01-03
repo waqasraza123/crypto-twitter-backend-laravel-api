@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tweet as TweetModel;
+use function React\Promise\map;
 
 class Tweet extends Controller
 {
 
-    /*
+    /**
      * store the tweet in db
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request){
-        $validated = $request->validate([
+
+        //validate the incoming data/request
+        $request->validate([
             "tweet" => "required|min:3|max:100"
         ]);
 
@@ -22,7 +27,7 @@ class Tweet extends Controller
             "user_id" => $user->id
         ]);
 
-        $tweet->author = $tweet->author;
+        $tweet->user = $tweet->user;
 
         return response()->json([
             "tweet" => $tweet,
@@ -31,11 +36,15 @@ class Tweet extends Controller
 
     }
 
-    /*
+    /**
      * returns all tweets
+     * @return \Illuminate\Http\JsonResponse
      */
     public function all(){
-        $tweets = TweetModel::with("author")->get();
+
+        $tweets = TweetModel::with(["user:id,name,email,photo", "likes", "comments.user:name,email,id,photo", "likedByCurrentUser"])
+            ->orderBy("updated_at", "desc")
+            ->get();
 
         return response()->json([
             "tweets" => $tweets

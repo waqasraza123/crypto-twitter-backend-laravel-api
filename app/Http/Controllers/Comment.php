@@ -34,11 +34,13 @@ class Comment extends Controller
             return $input->commentable_type == "tweets";
         });
 
+        $commentableType = $request->input("commentable_type") === "blogs" ? "App\Models\Blog" : "App\Models\Tweet";
+
         //store the comment
         $comment = CommentModel::create([
             "comment" => $request->input("comment"),
             "commentable_id" => $request->input("commentable_id"),
-            "commentable_type" => $request->input("commentable_type"),
+            "commentable_type" => $commentableType,
             "user_id" => $request->user()->id
         ]);
 

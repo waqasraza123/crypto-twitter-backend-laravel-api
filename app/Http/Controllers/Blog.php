@@ -58,10 +58,9 @@ class Blog extends Controller
         ])->validate();
 
         //fetch the post from db
-        $post = BlogModel::find($postId);
-
-        //set the post author using belongs to
-        $post->author = $post->author;
+        $post = BlogModel::whereId($postId)
+            ->with(["user:id,name,email,photo", "comments.user:id,name,email,photo"])
+            ->first();
 
         //response
         return response()->json([
@@ -76,7 +75,7 @@ class Blog extends Controller
      */
     public function all(){
 
-        $blogs = BlogModel::with("author")->orderBy("updated_at", "desc")->get();
+        $blogs = BlogModel::with("user:id,name,email,photo")->orderBy("updated_at", "desc")->get();
 
         return response()->json($blogs, 200);
     }
