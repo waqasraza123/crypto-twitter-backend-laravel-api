@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\SocialAccount;
+use Laravel\Cashier\Cashier;
 
 class Login extends Controller
 {
@@ -35,15 +36,26 @@ class Login extends Controller
 
         $user = User::where("email", $email)->firstOrFail();
 
-        //create token for the user
-        $token = $user->createToken($email)->plainTextToken;
-        $user->accessToken = $token;
+        if($user){
+            //create user as a cashier(stripe) customer
+            $cashierUser = Cashier::findBillable($user->stripe_id);
+            $cashierUser ?? $user->createAsStripeCustomer();
 
-        //record not found
+            //create token for the user
+            $token = $user->createToken($email)->plainTextToken;
+            $user->accessToken = $token;
+            $user->intent = $user->createSetupIntent();
+
+            //record not found
+            return response()->json([
+                "message" => "Logged in Successfully.",
+                "user" => $user
+            ])->setStatusCode(200);
+        }
+
         return response()->json([
-            "message" => "Logged in Successfully.",
-            "user" => $user
-        ])->setStatusCode(200);
+            "message" => "User not found."
+        ], 404);
     }
 
 
@@ -62,7 +74,7 @@ class Login extends Controller
         return substr(md5(rand()), 0, 7).$emailString;
     }
 
-    /*
+    /**
      * social login
      * $socialName = github, facebook, google, ...
      * GET
@@ -100,10 +112,16 @@ class Login extends Controller
                     "social_name" => $socialUser->name
                 ]
             );
+
+            //create user as a cashier(stripe) customer
+            $cashierUser = Cashier::findBillable($user->stripe_id);
+            $cashierUser ?? $user->createAsStripeCustomer();
         }
 
         $token = $user->createToken($socialUser->getEmail())->plainTextToken;
         $user->accessToken = $token;
+        $user->balance = $user->balance();
+        $user->intent = $user->createSetupIntent();
 
         return response()->json([
             "user" => $user

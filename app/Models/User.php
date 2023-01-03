@@ -6,11 +6,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
+use function Illuminate\Events\queueable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -45,10 +47,26 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /*
+    /**
      * a user has many blogs (posts)
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany relation
      */
     public function blogs(){
         return $this->hasMany(Blog::class, "user_id", "id");
+    }
+
+    /**
+     * The "booted" method of the model.
+     * Sync user details with stripe
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::updated(queueable(function ($customer) {
+            if ($customer->hasStripeId()) {
+                $customer->syncStripeCustomerDetails();
+            }
+        }));
     }
 }

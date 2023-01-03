@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Crypto;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Register;
@@ -8,6 +9,7 @@ use App\Http\Controllers\UserProfile;
 use App\Http\Controllers\Blog;
 use App\Http\Controllers\Comment;
 use App\Http\Controllers\Tweet;
+use App\Http\Controllers\Like;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/user-profile", [UserProfile::class, "showProfile"]);
     Route::post("/user-profile/password", [UserProfile::class, "updatePassword"]);
 
+    //payment routes
+    Route::get('/billing-portal', function (Request $request) {
+        return $request->user()->billingPortalUrl();
+    });
+
     //crypto routes
     Route::get("crypto/all", [Crypto::class, "all"]);
     Route::get("crypto/meta/{currencyId}", [Crypto::class, "meta"]);
@@ -47,9 +54,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("tweet", [Tweet::class, "store"]);
     Route::get("tweets", [Tweet::class, "all"]);
 
+    //tweet likes/dislike routes
+    Route::post("likes", [Like::class, "store"]);
+
     //comment routes
     Route::post("comments", [Comment::class, "store"]);
-    Route::get("comments/post/{post_id}", [Comment::class, "postComments"]);
+    Route::get("comments/post/{post_id}/{type}", [Comment::class, "getPostComments"]);
 
     //logout route
     Route::post("logout", [UserProfile::class, "logout"]);

@@ -51,14 +51,17 @@ class Comment extends Controller
         ], 200);
     }
 
-    /*
-     * returns comments against a blog post
+    /**
+     * returns comments against a post
+     * @param $postId
+     * @param $type
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function postComments($postId){
+    public function getPostComments($postId, $type){
 
         $comments = CommentModel::with("user")
             ->where("commentable_id", $postId)
-            ->where("commentable_type", "blogs")
+            ->where("commentable_type", $type)
             ->orderBy("created_at", "desc")
             ->get();
 
