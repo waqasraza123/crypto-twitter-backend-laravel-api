@@ -37,6 +37,7 @@ class Tweet extends Model
      * returns comments of this tweet
      */
     public function comments(){
-        return $this->morphMany(Comment::class, "commentable");
+        return $this->morphMany(Comment::class, "commentable")
+            ->orderBy("updated_at", "desc");
     }
 }

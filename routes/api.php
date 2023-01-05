@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //tweet routes
     Route::post("tweet", [Tweet::class, "store"]);
     Route::get("tweets", [Tweet::class, "all"]);
+    Route::get("tweet/{id}", [Tweet::class, "single"]);
 
     //tweet likes/dislike routes
     Route::post("likes", [Like::class, "store"]);

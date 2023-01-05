@@ -22,6 +22,7 @@ class Blog extends Model
      * get this post's comments
      */
     public function comments(){
-        return $this->morphMany(Comment::class, "commentable");
+        return $this->morphMany(Comment::class, "commentable")
+            ->orderBy("updated_at", "desc");
     }
 }

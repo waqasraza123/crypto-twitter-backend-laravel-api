@@ -15,7 +15,7 @@ class Blog extends Controller
     public function store(Request $request){
 
         //validate the request
-        $validated = $request->validate([
+        $request->validate([
             "title" => "required|min:6|max:100",
             "content" => "required|min:10|max:1000",
         ]);
@@ -59,7 +59,7 @@ class Blog extends Controller
 
         //fetch the post from db
         $post = BlogModel::whereId($postId)
-            ->with(["user:id,name,email,photo", "comments.user:id,name,email,photo"])
+            ->with(["user", "comments.user"])
             ->first();
 
         //response
@@ -75,7 +75,7 @@ class Blog extends Controller
      */
     public function all(){
 
-        $blogs = BlogModel::with("user:id,name,email,photo")->orderBy("updated_at", "desc")->get();
+        $blogs = BlogModel::with("user")->orderBy("updated_at", "desc")->get();
 
         return response()->json($blogs, 200);
     }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tweet as TweetModel;
-use function React\Promise\map;
 
 class Tweet extends Controller
 {
@@ -42,12 +41,35 @@ class Tweet extends Controller
      */
     public function all(){
 
-        $tweets = TweetModel::with(["user:id,name,email,photo", "likes", "comments.user:name,email,id,photo", "likedByCurrentUser"])
+        $tweets = TweetModel::with(["user", "likes", "comments.user", "likedByCurrentUser"])
             ->orderBy("updated_at", "desc")
             ->get();
 
         return response()->json([
             "tweets" => $tweets
         ]);
+    }
+
+
+    /**
+     * returns single tweet
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * GET
+     */
+    public function single($id){
+        try{
+            $tweet = TweetModel::whereId($id)
+                ->with(["user", "comments.user", "likes", "likedByCurrentUser"])
+                ->first();
+
+            return response()->json([
+                "tweet" => $tweet
+            ], 200);
+
+        }catch (\Throwable $exception){
+            return response()->json($exception, 500);
+        }
+
     }
 }
