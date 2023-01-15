@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Cashier\Cashier;
 
 class Register extends Controller
 {
@@ -30,9 +31,14 @@ class Register extends Controller
 
         Auth::login($user);
 
+        //create user as a cashier(stripe) customer
+        $cashierUser = Cashier::findBillable($user->stripe_id);
+        $cashierUser ?? $user->createAsStripeCustomer();
+
         //create token for the user
         $token = $user->createToken($request->email)->plainTextToken;
         $user->accessToken = $token;
+        $user->balance = $user->balance();
 
         //return response
         return response()->json([

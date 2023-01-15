@@ -2,81 +2,87 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Blog as BlogModel;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class Blog extends Controller
 {
-    /*
-     * save blog post to db
-     * POST
+    /**
+     * Save a blog post to the database.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request){
-
-        //validate the request
-        $request->validate([
+    public function store(Request $request): JsonResponse
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
             "title" => "required|min:6|max:100",
             "content" => "required|min:10|max:1000",
         ]);
 
-        //get current user id
+        // Get the current user
         $user = $request->user();
 
-        //save the post in db
-        //$user->blogs()->create($validated);
-
-        //it's equivalent to above one liner
+        // Create the blog post in the database
         $post = BlogModel::create([
-            "title" => $request->input("title"),
-            "content" => $request->input("content"),
+            "title" => $validatedData['title'],
+            "content" => $validatedData['content'],
             "user_id" => $user->id
         ]);
 
-        //set the post author using belongs to
+        // Set the post author using the belongsTo relationship
         $post->author = $post->author;
 
-        //response
+        // Return a success response
         return response()->json([
             "message" => "Post created",
             "post" => $post
         ], 200);
     }
 
-    /*
-     * returns a single post
-     * and its comments
-     * GET
+    /**
+     * Returns a single post and its comments.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function single(Request $request){
-
+    public function single(Request $request): JsonResponse
+    {
+        // Get the post ID from the route parameters
         $postId = $request->route()->parameter("id");
 
-        //validate if post exists
+        // Validate that the post exists
         Validator::make($request->route()->parameters(), [
             "id" => "required|exists:App\Models\Blog,id"
         ])->validate();
 
-        //fetch the post from db
+        // Fetch the post from the database
         $post = BlogModel::whereId($postId)
             ->with(["user", "comments.user"])
             ->first();
 
-        //response
+        // Return the post data in a JSON response
         return response()->json([
             "post" => $post
         ], 200);
-
     }
 
-    /*
-     * returns all posts
-     * GET
+    /**
+     * Returns all posts.
+     *
+     * @return JsonResponse
      */
-    public function all(){
+    public function all(): JsonResponse
+    {
+        // Fetch all blog posts from the database
+        $blogs = BlogModel::with("user")->orderBy("updated_at", "desc")->paginate(1);
 
-        $blogs = BlogModel::with("user")->orderBy("updated_at", "desc")->get();
-
+        // Return the posts in a JSON response
         return response()->json($blogs, 200);
     }
 }

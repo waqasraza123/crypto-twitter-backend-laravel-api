@@ -18,7 +18,6 @@ class Login extends Controller
     public function login(Request $request){
 
         $email = $request->input("email");
-        $password = $request->input("password");
 
         //validate the incoming data
         $validated = $request->validate([
@@ -44,6 +43,7 @@ class Login extends Controller
             //create token for the user
             $token = $user->createToken($email)->plainTextToken;
             $user->accessToken = $token;
+            $user->balance = $user->balance();
             $user->intent = $user->createSetupIntent();
 
             //record not found

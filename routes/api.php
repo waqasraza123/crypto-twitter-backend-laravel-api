@@ -10,6 +10,7 @@ use App\Http\Controllers\Blog;
 use App\Http\Controllers\Comment;
 use App\Http\Controllers\Tweet;
 use App\Http\Controllers\Like;
+use App\Http\Controllers\GlobalSearch;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,12 @@ Route::middleware('auth:sanctum')->group(function () {
     //comment routes
     Route::post("comments", [Comment::class, "store"]);
     Route::get("comments/post/{post_id}/{type}", [Comment::class, "getPostComments"]);
+
+    //search routes
+    Route::get('global-search/', [GlobalSearch::class, 'search'])
+        ->name("search.global");
+    Route::get('global-search/{searchTerm}', [GlobalSearch::class, 'search'])
+        ->name("search.global");
 
     //logout route
     Route::post("logout", [UserProfile::class, "logout"]);

@@ -51,10 +51,13 @@ class UserProfile extends Controller
 
     /*
      * returns info about user profile
+     * GET
      */
     public function showProfile(Request $request)
     {
         $user = $request->user();
+        $user->bio = $user->bio === null ? "" : $user->bio;
+        $user->balance = $user->balance();
 
         return response()->json([
             "user" => $user

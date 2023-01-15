@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Database\Factories\TweetFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Tweet extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
     protected $fillable = ["tweet", "user_id"];
 
     /**
@@ -39,5 +42,27 @@ class Tweet extends Model
     public function comments(){
         return $this->morphMany(Comment::class, "commentable")
             ->orderBy("updated_at", "desc");
+    }
+
+
+    /**
+     * for searching
+     */
+    public function toSearchableArray()
+    {
+        return [
+            'tweet' => $this->tweet,
+            'id' => $this->id,
+        ];
+    }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return Factory
+     */
+    protected static function newFactory(): Factory
+    {
+        return TweetFactory::new();
     }
 }

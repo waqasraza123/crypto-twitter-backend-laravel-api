@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Like as LikeModel;
