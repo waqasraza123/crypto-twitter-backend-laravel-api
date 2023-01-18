@@ -47,9 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("crypto/meta/{currencyId}", [Crypto::class, "meta"]);
 
     //blog routes
-    Route::post("blog/posts", [Blog::class, "store"]);
-    Route::get("blog/posts", [Blog::class, "all"]);
-    Route::get("blog/post/{id}", [Blog::class, "single"]);
+    Route::post("blog/posts", [Blog::class, "store"])->name("posts.store");
+    Route::get("blog/posts", [Blog::class, "all"])->name("posts.all");
+    Route::get("blog/post/{id}", [Blog::class, "single"])->name("posts.single");
 
     //tweet routes
     Route::post("tweet", [Tweet::class, "store"]);

@@ -62,6 +62,7 @@ class Blog extends Controller
         ])->validate();
 
         // Fetch the post from the database
+        // along with its user, comments and comments' user
         $post = BlogModel::whereId($postId)
             ->with(["user", "comments.user"])
             ->first();
@@ -80,7 +81,7 @@ class Blog extends Controller
     public function all(): JsonResponse
     {
         // Fetch all blog posts from the database
-        $blogs = BlogModel::with("user")->orderBy("updated_at", "desc")->paginate(1);
+        $blogs = BlogModel::with("user")->orderBy("updated_at", "desc")->paginate(5);
 
         // Return the posts in a JSON response
         return response()->json($blogs, 200);

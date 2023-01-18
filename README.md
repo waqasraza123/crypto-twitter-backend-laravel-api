@@ -1,6 +1,6 @@
 - Converting [this](https://github.com/waqasraza123/crypto-twitter-backend) Nodejs and Express powered API to Laravel.
-- Using [Laravel Sanctum](https://laravel.com/docs/9.x/sanctum) for authentication via API Tokens.
-- Not using laravel cookies/session to authenticate.
+- Using [Laravel Sanctum](https://laravel.com/docs/9.x/sanctum) for authentication via access Tokens.
 - This project uses CoinmarketCap API Key. So generate yours and set in .env as `COINMARKETCAP_API`
 - `Laravel Socialite` package is used to login via `Social Networks` i.e. github, google, twitter
 - `Laravel Cashier with stripe payments`
+- Test cases written [PHPUnit](https://phpunit.de/)

@@ -2,21 +2,30 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\GlobalSearch;
 use Tests\TestCase;
 use App\Models\Tweet;
 use App\Models\Blog;
 use App\Models\User;
+use App\Http\Controllers\GlobalSearch;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class GlobalSearchTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testSearchWithSearchTermLorem()
+    public function setUp(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
+    /**
+     * test search function with random text Lorem
+     * @return void
+     */
+    public function testSearchWithSearchTermLorem(): void
+    {
+        $this->actingAs($this->user);
 
         // create some tweets and blog posts in the database
         Tweet::factory()->count(5)->create();
@@ -31,10 +40,14 @@ class GlobalSearchTest extends TestCase
         ]);
     }
 
-    public function testSearchWithSearchTermIpsum()
+
+    /**
+     * test search function with random text Ipsum
+     * @return void
+     */
+    public function testSearchWithSearchTermIpsum(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         // create some tweets and blog posts in the database
         Tweet::factory()->count(5)->create();
@@ -49,10 +62,13 @@ class GlobalSearchTest extends TestCase
         ]);
     }
 
-    public function testSearchWithEmptySearchTerm()
+    /**
+     * test search function with empty search term
+     * @return void
+     */
+    public function testSearchWithEmptySearchTerm(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         // create some tweets and blog posts in the database
         Tweet::factory()->count(5)->create();
@@ -66,10 +82,14 @@ class GlobalSearchTest extends TestCase
         ]);
     }
 
-    public function testSearchWithSearchTermRandomText()
+
+    /**
+     * * test search function with random text
+     * @return void
+     */
+    public function testSearchWithSearchTermRandomText(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         // create some tweets and blog posts in the database
         Tweet::factory()->count(5)->create();
@@ -84,10 +104,14 @@ class GlobalSearchTest extends TestCase
         ]);
     }
 
-    public function testSearchWithNullSearchTerm()
+
+    /**
+     * test search function with Null
+     * @return void
+     */
+    public function testSearchWithNullSearchTerm(): void
     {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         // create some tweets and blog posts in the database
         Tweet::factory()->count(5)->create();
@@ -101,7 +125,11 @@ class GlobalSearchTest extends TestCase
         ]);
     }
 
-    public function testGetTweetsResults()
+    /**
+     * test the tweets function
+     * @return void
+     */
+    public function testGetTweetsResults():void
     {
         $globalSearch = new GlobalSearch();
 
@@ -114,7 +142,12 @@ class GlobalSearchTest extends TestCase
         $this->assertContains("lorem", $tweets->pluck("tweet")->toArray());
     }
 
-    public function testGetBlogPostsResults()
+
+    /**
+     * test blog posts results
+     * @return void
+     */
+    public function testGetBlogPostsResults(): void
     {
         $globalSearch = new GlobalSearch();
 
@@ -127,7 +160,12 @@ class GlobalSearchTest extends TestCase
         $this->assertContains("lorem", $blogPosts->pluck("title")->toArray());
     }
 
-    public function testGetBlogPostsResultsWithEmptySearchTerm(){
+    /**
+     * test blog search results with empty value
+     * @return void
+     */
+    public function testGetBlogPostsResultsWithEmptySearchTerm(): void
+    {
         $globalSearch = new GlobalSearch();
 
         //test search with empty search term
@@ -135,7 +173,12 @@ class GlobalSearchTest extends TestCase
         $this->assertEmpty($blogPosts);
     }
 
-    public function testGetBlogPostsResultsWithNullSearchTerm(){
+    /**
+     * test blog posts results with Null value
+     * @return void
+     */
+    public function testGetBlogPostsResultsWithNullSearchTerm(): void
+    {
         $globalSearch = new GlobalSearch();
 
         //test search with null search term
@@ -143,9 +186,12 @@ class GlobalSearchTest extends TestCase
         $this->assertEmpty($blogPosts);
     }
 
-    public function testGetTweetsResultsWithEmptySearchTerm()
+    /**
+     * test tweets result function with empty value
+     * @return void
+     */
+    public function testGetTweetsResultsWithEmptySearchTerm(): void
     {
-
         $globalSearch = new GlobalSearch();
 
         //test search with empty search term
@@ -153,9 +199,13 @@ class GlobalSearchTest extends TestCase
         $this->assertEmpty($tweets);
     }
 
-    public function testGetTweetsResultsWithNullSearchTerm()
-    {
 
+    /**
+     * test tweets results with Null value
+     * @return void
+     */
+    public function testGetTweetsResultsWithNullSearchTerm(): void
+    {
         $globalSearch = new GlobalSearch();
 
         //test search with null search term
