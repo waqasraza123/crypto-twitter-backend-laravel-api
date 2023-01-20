@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Blog;
 use App\Models\Comment;
 use App\Models\User;
+use App\Models\Tweet;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,8 +30,10 @@ class CommentFactory extends Factory
     {
         return [
             'comment' => $this->faker->paragraph(1),
-            'commentable_id' => Blog::inRandomOrder()->first()->id,
-            'commentable_type' => Blog::class,
+            'commentable_type' => $this->faker->randomElement([Blog::class, Tweet::class]),
+            'commentable_id' => function (array $comment) {
+                    return $comment['commentable_type']::inRandomOrder()->first()->id;
+                },
             'user_id' => User::inRandomOrder()->first()->id,
         ];
     }
