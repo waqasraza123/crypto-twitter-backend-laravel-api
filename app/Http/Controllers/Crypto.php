@@ -53,18 +53,16 @@ class Crypto extends Controller
         return $response;
     }
 
-    /*
-     * shows a currency's meta
+    /**
+     * @param $currencyId
+     * @return bool|string
      */
-    public function meta($currencyId){
+    public function meta($currencyId)
+    {
 
         $path = "/v2/cryptocurrency/info?id=" . $currencyId;
         $requestUrl = $this->baseURL . $path; // create the request URL
 
-        $response = $this->getCurlResponse($requestUrl);
-
-        //response is already a json response so no need to do
-        //json($response)
-        return $response;
+        return $this->getCurlResponse($requestUrl);
     }
 }

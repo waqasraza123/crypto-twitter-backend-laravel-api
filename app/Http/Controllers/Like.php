@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Like as LikeModel;
+use Illuminate\Validation\Rule;
+use App\Models\Tweet;
 
 class Like extends Controller
 {
@@ -14,11 +16,13 @@ class Like extends Controller
      * @return JsonResponse
      * POST
      */
-    public function store(Request $request){
-
+    public function store(Request $request): JsonResponse
+    {
         //validate the incoming data
         $request->validate([
-            "tweet_id" => "required|integer|exists:tweets,id"
+            "tweet_id" => [
+                "required", "integer", Rule::exists(Tweet::class, "id")
+            ]
         ]);
 
         //get the tweet id from request
